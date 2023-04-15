@@ -1,15 +1,10 @@
-﻿using LoadBalancer.Strategies;
+using LoadBalancer;
 
-namespace LoadBalancer;
-
-public interface ILoadBalancer
+interface ILoadBalancer
 {
-    public string AddServer(string url);
-
-    public string RemoveServer(string id);
-
-    public string GetServer();
-    public List<Server> GetServers();
-
-    public int SetLoadBalancerStrategy(int selection);
+    string AddServer(string url);
+    string RemoveServer(string id);
+    int SetLoadBalancerStrategy(int selection);
+    Server GetServer();
+    List<Server> GetServers();
 }

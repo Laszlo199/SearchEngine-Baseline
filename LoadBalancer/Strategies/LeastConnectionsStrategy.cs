@@ -2,7 +2,7 @@
 
 public class LeastConnectionsStrategy : ILoadBalancerStrategy
 {
-    public string GetServer(List<Server> servers)
+    public Server GetServer(List<Server> servers)
     {
         var minConnections = Int32.MaxValue;
         Server selectedServer = null;
@@ -20,8 +20,6 @@ public class LeastConnectionsStrategy : ILoadBalancerStrategy
         {
             throw new Exception("LeastConnectionsStrategy selected server not found");
         };
-
-        selectedServer.Connections++;
-        return selectedServer.Url;
+        return selectedServer;
     }
 }

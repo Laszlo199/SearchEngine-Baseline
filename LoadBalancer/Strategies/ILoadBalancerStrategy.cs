@@ -1,6 +1,6 @@
-﻿namespace LoadBalancer.Strategies;
+using LoadBalancer;
 
-public interface ILoadBalancerStrategy
+interface ILoadBalancerStrategy
 {
-    string GetServer(List<Server> servers);
+    Server GetServer(List<Server> servers);
 }

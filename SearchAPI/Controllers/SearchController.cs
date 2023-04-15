@@ -1,16 +1,20 @@
-﻿using Common;
+using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Services;
+using SearchAPI.Controllers;
 
 namespace SearchAPI.Controllers;
 [ApiController]
 [Route("[controller]")]
-public class SearchController : ControllerBase
+public class SearchController : Controller
 {
+
     [HttpGet]
-    public async Task<SearchResult> Search(string terms, int numberOfResults)
+    public async Task<Common.SearchResult> Search(string terms, int numberOfResults)
     {
         var mSearchLogic = new SearchLogic(new Database());
-        var result = new SearchResult();
+        
+        var result = new Common.SearchResult();
         
         var wordIds = new List<int>();
         var searchTerms = terms.Split(" ", StringSplitOptions.RemoveEmptyEntries);
@@ -29,7 +33,7 @@ public class SearchController : ControllerBase
 
         DateTime start = DateTime.Now;
 
-        var docIds = await mSearchLogic.GetDocuments(wordIds);
+        var docIds = await mSearchLogic.GetDocumentsAsync(wordIds);
 
         // get details for the first 10             
         var top = new List<int>();
@@ -38,12 +42,12 @@ public class SearchController : ControllerBase
             top.Add(p.Key);
         }
 
-        result.ElapsedMilliseconds = (DateTime.Now - start).TotalMilliseconds;
+        result.ElapsedMlliseconds = (DateTime.Now - start).TotalMilliseconds;
 
         int idx = 0;
-        foreach (var doc in await mSearchLogic.GetDocumentDetails(top))
+        foreach (var doc in await mSearchLogic.GetDocumentDetailsAsync(top))
         {
-            result.Documents.Add(new Document() { Id=idx+1, Path = doc, NumberOfApearances = docIds[idx].Value});
+            result.Documents.Add(new Common.Document{Id = idx+1, Path = doc, NumberOfOccurences = docIds[idx].Value});
             idx++;
         }
 
