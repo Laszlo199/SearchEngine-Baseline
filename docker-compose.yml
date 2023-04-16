@@ -19,3 +19,9 @@ services:
       replicas: 3
     depends_on:
       - load-balancer
+  web-ui:
+    build:
+      context: .
+      dockerfile: "WebSearch/Dockerfile"
+    ports:
+      - 9023:80
