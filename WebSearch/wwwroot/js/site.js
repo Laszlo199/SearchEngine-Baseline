@@ -2,32 +2,30 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-let ViewModel = function () {
+var ViewModel = function() {
 
-    let me = this;
+    let me =  this;
 
-    me.searchTerms = ko.observable();
-    me.hits = ko.observable();
-    me.results = ko.observableArray();
-    me.timeUsed = ko.observable();
+    me.userQuery = ko.observable();
+    me.returnedQuery = ko.observableArray();
+    me.queryMatches = ko.observable();
+    me.queryTime = ko.observable();
 
-    me.search = function() {
+    me.search = function (){
         $.ajax({
-            url: "http://localhost:9020/Search?terms=" + me.searchTerms() + "&numberOfResults=10",
-            success: function(data) {
+            url: "http://localhost:9020/LoadBalancer?terms=" + me.userQuery() + "&numberOfResults=10", //todo use load balancer
+            success: function (data) {
                 //data = JSON.parse(data);
                 console.log(data);
-                me.hits(data.documents.length);
-                me.timeUsed(data.elapsedMilliseconds);
-                me.results.removeAll();
-                data.documents.forEach(function(hit) {
-                    me.results.push(hit);
+                me.queryMatches(data.documents.length);
+                me.queryTime(data.elapsedMilliseconds);
+                me.returnedQuery.removeAll();
+                data.documents.forEach( function (hit) {
+                    me.returnedQuery.push(hit);
+                    console.log(hit);
                 });
-                console.log(me.hits());
-                console.log(me.timeUsed());
             }
         });
     }
-
-};
+}
 ko.applyBindings(new ViewModel());
