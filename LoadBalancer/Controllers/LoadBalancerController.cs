@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Common;
+using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 
 namespace LoadBalancer.Controllers;
 
@@ -38,5 +40,25 @@ public class LoadBalancerController : Controller
     public List<Server> AddServer()
     {
         return _loadBalancer.GetServers();
+    }
+    
+    [HttpGet]
+    public IActionResult Search(string terms, int numberOfResults)
+    {
+        var server = _loadBalancer.GetServer();
+        
+        RestClient serviceClient = new(server.Url);
+        RestRequest request = new("/Search");
+        request.AddParameter("terms", terms);
+        request.AddParameter("numberOfResults", numberOfResults);
+        Console.WriteLine(request.ToString());
+        Task<SearchResult?> response = serviceClient.GetAsync<SearchResult>(request);
+        response.Wait();
+        SearchResult? result = response.Result;
+        if (result is null)
+        {
+            return NotFound("Results not found");
+        }
+        return Ok(result);
     }
 }

@@ -57,14 +57,16 @@ public class LoadBalancer : ILoadBalancer
         }
     }
 
-    public string GetServer()
+    public Server GetServer()
     {
         if (_servers.Count <= 0)
         {
             throw new Exception("No servers available!");
         }
 
-        return _strategy.GetServer(_servers);
+        var server = _strategy.GetServer(_servers);
+        server.Connections++;
+        return server;
     }
 
     public List<Server> GetServers()
